@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Súper Interactiva</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #fff8ed;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #ff7a1a;
+      --primary-dark: #e85f00;
+      --green: #16a34a;
+      --red: #ef4444;
+      --yellow: #facc15;
+      --border: #f0dfc9;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 122, 26, 0.18), transparent 35%),
+        radial-gradient(circle at top right, rgba(22, 163, 74, 0.15), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 30px 18px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .app {
+      width: min(1120px, 94%);
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .main-panel,
+    .cart-panel,
+    .other-panel {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .main-panel {
+      padding: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      outline: none;
+      background: #fff;
+      transition: 0.2s;
+    }
+
+    .search-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.12);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+
+    .filter-btn {
+      border: 0;
+      background: #fff;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 12px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 190px;
+      min-width: 0;
+      transition: 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 24px rgba(0,0,0,0.09);
+    }
+
+    .emoji {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .product-name {
+      font-size: 1.02rem;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff3df;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.85rem;
+      min-height: 18px;
+    }
+
+    .qty-row {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 8px;
+    }
+
+    .qty-btn {
+      border: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #fff;
+      transition: 0.2s;
+    }
+
+    .minus { background: var(--red); }
+    .plus { background: var(--green); }
+
+    .qty-btn:hover {
+      opacity: 0.88;
+      transform: scale(1.04);
+    }
+
+    .qty-number {
+      font-weight: 900;
+      font-size: 1.1rem;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 16px;
+    }
+
+    .cart-panel,
+    .other-panel { padding: 18px; }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .cart-header h2,
+    .other-panel h2 {
+      color: var(--primary-dark);
+      font-size: 1.5rem;
+    }
+
+    .total-badge {
+      background: var(--yellow);
+      color: #2b2200;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .summary-card {
+      background: #fff8ed;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 1.4rem;
+      color: var(--primary-dark);
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .cart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-bottom: 14px;
+    }
+
+    .cart-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px 8px;
+      background: #f9fafb;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .cart-item-emoji { font-size: 1.7rem; }
+
+    .cart-item-name {
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+
+    .cart-item-cat {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .cart-item-qty {
+      background: #ecfdf5;
+      color: #166534;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action-btn {
+      border: 0;
+      padding: 13px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    .copy-btn { background: var(--green); color: #fff; }
+    .clear-btn { background: #111827; color: #fff; }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
+    .other-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .other-form input {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 13px;
+      padding: 12px 13px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+    }
+
+    .other-form input:focus { border-color: var(--primary); }
+
+    .other-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .add-other-btn {
+      background: var(--primary);
+      color: #fff;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .add-other-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(120px);
+      background: #111827;
+      color: #fff;
+      padding: 13px 18px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      background: #fff;
+      border: 1px dashed var(--border);
+      padding: 28px;
+      text-align: center;
+      border-radius: 18px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .side { position: static; }
+      .toolbar { grid-template-columns: 1fr; }
+    }
+
+
+    @media (max-width: 760px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      header { padding-top: 22px; }
+      .main-panel,
+      .cart-panel,
+      .other-panel { padding: 14px; }
+      .products-grid { gap: 10px; }
+      .product-card {
+        min-height: 210px;
+        padding: 13px;
+      }
+      .emoji { font-size: 2rem; }
+      .product-name { font-size: 0.95rem; }
+      .category-pill { font-size: 0.82rem; }
+      .other-form-row,
+      .actions,
+      .summary { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Lista de Súper Interactiva</h1>
+    <p>Selecciona productos, ajusta cantidades y copia tu lista ordenada por categoría.</p>
+  </header>
+
+  <main class="app">
+    <section class="main-panel">
+      <div class="toolbar">
+        <input id="searchInput" class="search-box" type="text" placeholder="Buscar ingrediente..." />
+      </div>
+      <div id="filters" class="filters"></div>
+      <div id="productsGrid" class="products-grid"></div>
+    </section>
+
+    <aside class="side">
+      <section class="cart-panel">
+        <div class="cart-header">
+          <h2>Mi lista</h2>
+          <div id="totalBadge" class="total-badge">0 artículos</div>
+        </div>
+
+        <div class="summary">
+          <div class="summary-card">
+            <strong id="uniqueCount">0</strong>
+            <span>Ingredientes distintos</span>
+          </div>
+          <div class="summary-card">
+            <strong id="totalCount">0</strong>
+            <span>Cantidad total</span>
+          </div>
+        </div>
+
+        <div id="cartList" class="cart-list">
+          <div class="cart-empty">Tu lista está vacía.</div>
+        </div>
+
+        <div class="actions">
+          <button id="copyBtn" class="action-btn copy-btn">Copiar lista</button>
+          <button id="clearBtn" class="action-btn clear-btn">Limpiar lista</button>
+        </div>
+      </section>
+
+      <section class="other-panel">
+        <h2>Otros</h2>
+        <form id="otherForm" class="other-form">
+          <input id="otherName" type="text" placeholder="Nombre del ingrediente" required />
+          <input id="otherNote" type="text" placeholder="Nota opcional" />
+          <div class="other-form-row">
+            <input id="otherEmoji" type="text" placeholder="Emoji 🛒" maxlength="4" />
+            <input id="otherQty" type="number" placeholder="Cantidad" min="1" value="1" required />
+          </div>
+          <button type="submit" class="add-other-btn">Agregar a otros</button>
+        </form>
+      </section>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast">Lista copiada ✅</div>
+
+  <script>
+    const products = [
+      { id: "jabon-para-trastes", emoji: "🧽", name: "Jabón para trastes", category: "Limpieza y hogar", note: "" },
+      { id: "jabon-para-ropa", emoji: "👕", name: "Jabón para ropa", category: "Limpieza y hogar", note: "" },
+      { id: "suavizante-para-ropa", emoji: "🧺", name: "Suavizante para ropa", category: "Limpieza y hogar", note: "" },
+      { id: "desengrasante-para-trastes", emoji: "🍽️", name: "Desengrasante para trastes", category: "Limpieza y hogar", note: "" },
+      { id: "limpia-vidrios", emoji: "🪟", name: "Limpia vidrios", category: "Limpieza y hogar", note: "" },
+      { id: "jabon-para-wc", emoji: "🚽", name: "Jabón para WC", category: "Limpieza y hogar", note: "" },
+      { id: "jabon-para-manos", emoji: "🧼", name: "Jabón para manos", category: "Limpieza y hogar", note: "" },
+      { id: "papel-higienico", emoji: "🧻", name: "Papel higiénico", category: "Limpieza y hogar", note: "" },
+      { id: "servilletas", emoji: "🧾", name: "Servilletas", category: "Limpieza y hogar", note: "" },
+      { id: "servitoallas", emoji: "🧻", name: "Servitoallas", category: "Limpieza y hogar", note: "" },
+      { id: "esponjas-para-trastes", emoji: "🧽", name: "Esponjas para trastes", category: "Limpieza y hogar", note: "" },
+      { id: "limpiador-de-pisos", emoji: "🧴", name: "Limpiador de pisos", category: "Limpieza y hogar", note: "" },
+      { id: "guantes", emoji: "🧤", name: "Guantes", category: "Limpieza y hogar", note: "" },
+      { id: "chocomilk", emoji: "🍫", name: "Chocomilk", category: "Bebidas y básicos", note: "" },
+      { id: "cafe", emoji: "☕", name: "Café", category: "Bebidas y básicos", note: "" },
+      { id: "te", emoji: "🍵", name: "Té", category: "Bebidas y básicos", note: "" },
+      { id: "coque", emoji: "🥤", name: "Coque", category: "Bebidas y básicos", note: "" },
+      { id: "leche", emoji: "🥛", name: "Leche", category: "Fríos y lácteos", note: "" },
+      { id: "yogurt", emoji: "🥣", name: "Yogurt", category: "Fríos y lácteos", note: "" },
+      { id: "queso-gouda", emoji: "🧀", name: "Queso gouda", category: "Fríos y lácteos", note: "" },
+      { id: "queso-feta", emoji: "🧀", name: "Queso feta", category: "Fríos y lácteos", note: "" },
+      { id: "crema", emoji: "🥛", name: "Crema", category: "Fríos y lácteos", note: "" },
+      { id: "jamon", emoji: "🍖", name: "Jamón", category: "Fríos y lácteos", note: "" },
+      { id: "queso-de-puerco", emoji: "🐷", name: "Queso de puerco", category: "Fríos y lácteos", note: "" },
+      { id: "huevo", emoji: "🥚", name: "Huevo", category: "Huevos y tortillas", note: "" },
+      { id: "tortillas-de-harina", emoji: "🌯", name: "Tortillas de harina", category: "Huevos y tortillas", note: "" },
+      { id: "tortillas-de-maiz", emoji: "🌽", name: "Tortillas de maíz", category: "Huevos y tortillas", note: "" },
+      { id: "miel", emoji: "🍯", name: "Miel", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "granola", emoji: "🥣", name: "Granola", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "nueces", emoji: "🥜", name: "Nueces", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "almendras", emoji: "🌰", name: "Almendras", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "semillas-de-calabaza", emoji: "🎃", name: "Semillas de calabaza", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "arandanos", emoji: "🍒", name: "Arándanos", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "datiles", emoji: "🌴", name: "Dátiles", category: "Semillas, cereales y endulzantes", note: "" },
+      { id: "arroz", emoji: "🍚", name: "Arroz", category: "Despensa", note: "" },
+      { id: "frijol", emoji: "🫘", name: "Frijol", category: "Despensa", note: "" },
+      { id: "lenteja", emoji: "🫘", name: "Lenteja", category: "Despensa", note: "" },
+      { id: "pastas", emoji: "🍝", name: "Pastas", category: "Despensa", note: "" },
+      { id: "garbanzo", emoji: "🧆", name: "Garbanzo", category: "Despensa", note: "" },
+      { id: "atun", emoji: "🥫", name: "Atún", category: "Despensa", note: "" },
+      { id: "pollo", emoji: "🍗", name: "Pollo", category: "Carnes y pescados", note: "" },
+      { id: "puerco", emoji: "🐖", name: "Puerco", category: "Carnes y pescados", note: "" },
+      { id: "res", emoji: "🥩", name: "Res", category: "Carnes y pescados", note: "" },
+      { id: "salmon", emoji: "🐟", name: "Salmón", category: "Carnes y pescados", note: "" },
+      { id: "pescado", emoji: "🐟", name: "Pescado", category: "Carnes y pescados", note: "" },
+      { id: "fruta", emoji: "🍎", name: "Fruta", category: "Frutas y verduras", note: "" },
+      { id: "verdura", emoji: "🥦", name: "Verdura", category: "Frutas y verduras", note: "" },
+      { id: "mayonesa", emoji: "🥚", name: "Mayonesa", category: "Aderezos y complementos", note: "" },
+      { id: "galletas", emoji: "🍪", name: "Galletas", category: "Aderezos y complementos", note: "" }
+    ];
+
+    const categoryOrder = [
+      "Limpieza y hogar",
+      "Bebidas y básicos",
+      "Fríos y lácteos",
+      "Huevos y tortillas",
+      "Semillas, cereales y endulzantes",
+      "Despensa",
+      "Carnes y pescados",
+      "Frutas y verduras",
+      "Aderezos y complementos",
+      "Otros"
+    ];
+
+    let selectedCategory = "Todos";
+    const cart = new Map();
+
+    const productsGrid = document.getElementById("productsGrid");
+    const filters = document.getElementById("filters");
+    const searchInput = document.getElementById("searchInput");
+    const cartList = document.getElementById("cartList");
+    const uniqueCount = document.getElementById("uniqueCount");
+    const totalCount = document.getElementById("totalCount");
+    const totalBadge = document.getElementById("totalBadge");
+    const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const otherForm = document.getElementById("otherForm");
+    const otherName = document.getElementById("otherName");
+    const otherNote = document.getElementById("otherNote");
+    const otherEmoji = document.getElementById("otherEmoji");
+    const otherQty = document.getElementById("otherQty");
+    const toast = document.getElementById("toast");
+
+    function normalizeText(text) {
+      return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function createFilters() {
+      const categories = ["Todos", ...categoryOrder];
+      filters.innerHTML = "";
+
+      categories.forEach(category => {
+        const btn = document.createElement("button");
+        btn.className = "filter-btn";
+        btn.textContent = category === "Todos" ? "🛒 Todos" : category;
+        btn.dataset.category = category;
+
+        if (category === selectedCategory) btn.classList.add("active");
+
+        btn.addEventListener("click", () => {
+          selectedCategory = category;
+          document.querySelectorAll(".filter-btn").forEach(button => button.classList.remove("active"));
+          btn.classList.add("active");
+          renderProducts();
+        });
+
+        filters.appendChild(btn);
+      });
+    }
+
+    function getVisibleProducts() {
+      const query = normalizeText(searchInput.value.trim());
+      return products.filter(product => {
+        const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
+        const matchesSearch =
+          normalizeText(product.name).includes(query) ||
+          normalizeText(product.category).includes(query) ||
+          normalizeText(product.note || "").includes(query);
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    function renderProducts() {
+      const visibleProducts = getVisibleProducts();
+      productsGrid.innerHTML = "";
+
+      if (visibleProducts.length === 0) {
+        productsGrid.innerHTML = '<div class="no-results">No se encontraron ingredientes.</div>';
+        return;
+      }
+
+      visibleProducts.forEach(product => {
+        const item = cart.get(product.id);
+        const quantity = item ? item.quantity : 0;
+        const card = document.createElement("article");
+        card.className = "product-card";
+
+        card.innerHTML = `
+          <div class="emoji">${product.emoji}</div>
+          <div class="product-name">${product.name}</div>
+          <div class="category-pill">${product.category}</div>
+          <div class="note">${product.note || ""}</div>
+          <div class="qty-row">
+            <button class="qty-btn minus" type="button" aria-label="Restar">−</button>
+            <div class="qty-number">${quantity}</div>
+            <button class="qty-btn plus" type="button" aria-label="Sumar">+</button>
+          </div>
+        `;
+
+        card.querySelector(".minus").addEventListener("click", () => updateQuantity(product.id, -1));
+        card.querySelector(".plus").addEventListener("click", () => updateQuantity(product.id, 1));
+        productsGrid.appendChild(card);
+      });
+    }
+
+    function updateQuantity(id, change) {
+      const product = products.find(item => item.id === id);
+      if (!product) return;
+
+      const current = cart.get(id);
+      const newQuantity = Math.max(0, (current ? current.quantity : 0) + change);
+
+      if (newQuantity === 0) {
+        cart.delete(id);
+      } else {
+        cart.set(id, { ...product, quantity: newQuantity });
+      }
+
+      renderProducts();
+      renderCart();
+    }
+
+    function addCustomItem(name, note, emoji, quantity) {
+      const cleanName = name.trim();
+      const cleanNote = note.trim();
+      const cleanEmoji = emoji.trim() || "🛒";
+      const cleanQuantity = Math.max(1, Number(quantity) || 1);
+      const id = "otros-" + Date.now();
+
+      const customProduct = {
+        id,
+        emoji: cleanEmoji,
+        name: cleanName,
+        category: "Otros",
+        note: cleanNote
+      };
+
+      products.push(customProduct);
+      cart.set(id, { ...customProduct, quantity: cleanQuantity });
+      createFilters();
+      renderProducts();
+      renderCart();
+    }
+
+    function renderCart() {
+      const items = Array.from(cart.values());
+      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+
+      uniqueCount.textContent = items.length;
+      totalCount.textContent = totalItems;
+      totalBadge.textContent = totalItems === 1 ? "1 artículo" : `${totalItems} artículos`;
+      cartList.innerHTML = "";
+
+      if (items.length === 0) {
+        cartList.innerHTML = '<div class="cart-empty">Tu lista está vacía.</div>';
+        return;
+      }
+
+      const sortedItems = items.sort((a, b) => {
+        const catA = categoryOrder.indexOf(a.category);
+        const catB = categoryOrder.indexOf(b.category);
+        if (catA !== catB) return catA - catB;
+        return a.name.localeCompare(b.name);
+      });
+
+      sortedItems.forEach(item => {
+        const cartItem = document.createElement("div");
+        cartItem.className = "cart-item";
+        cartItem.innerHTML = `
+          <div class="cart-item-emoji">${item.emoji}</div>
+          <div>
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-cat">${item.category}</div>
+          </div>
+          <div class="cart-item-qty">${item.quantity} x</div>
+        `;
+        cartList.appendChild(cartItem);
+      });
+    }
+
+    function buildCopyText() {
+      const items = Array.from(cart.values());
+      if (items.length === 0) return "Lista de súper:\n\nNo hay ingredientes seleccionados.";
+
+      let text = "Lista de súper:\n\n";
+      categoryOrder.forEach(category => {
+        const categoryItems = items
+          .filter(item => item.category === category)
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (categoryItems.length > 0) {
+          text += `${category}:\n`;
+          categoryItems.forEach(item => {
+            const noteText = item.note ? ` - ${item.note}` : "";
+            text += `- ${item.quantity} x ${item.emoji} ${item.name}${noteText}\n`;
+          });
+          text += "\n";
+        }
+      });
+      return text.trim();
+    }
+
+    async function copyList() {
+      const text = buildCopyText();
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Lista copiada ✅");
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast("Lista copiada ✅");
+      }
+    }
+
+    function clearList() {
+      cart.clear();
+      renderProducts();
+      renderCart();
+      showToast("Lista limpiada 🧹");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1900);
+    }
+
+    searchInput.addEventListener("input", renderProducts);
+    copyBtn.addEventListener("click", copyList);
+    clearBtn.addEventListener("click", clearList);
+
+    otherForm.addEventListener("submit", event => {
+      event.preventDefault();
+      if (!otherName.value.trim()) return;
+      addCustomItem(otherName.value, otherNote.value, otherEmoji.value, otherQty.value);
+      otherForm.reset();
+      otherQty.value = 1;
+      showToast("Agregado a Otros 🛒");
+    });
+
+    createFilters();
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
