@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lista de Súper Interactiva</title>
+  <title>Lista de Súper FAM Gonzalez</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
   <style>
     * {
@@ -22,15 +22,10 @@
       --green: #16a34a;
       --red: #ef4444;
       --yellow: #facc15;
+      --pink: #ec4899;
       --border: #f0dfc9;
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
       --radius: 18px;
-    }
-
-
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
     }
 
     body {
@@ -44,12 +39,12 @@
     }
 
     header {
-      padding: 30px 18px 18px;
+      padding: 28px 18px 18px;
       text-align: center;
     }
 
     header h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-size: clamp(2rem, 5vw, 3.1rem);
       color: var(--primary-dark);
       margin-bottom: 10px;
       letter-spacing: -1px;
@@ -61,46 +56,53 @@
     }
 
     .app {
-      width: min(1120px, 94%);
+      width: min(1180px, 96%);
       margin: 0 auto 40px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
+      grid-template-columns: minmax(0, 1fr) 340px;
       gap: 18px;
       align-items: start;
     }
 
     .main-panel,
     .cart-panel,
-    .other-panel {
-      background: rgba(255, 255, 255, 0.88);
+    .other-panel,
+    .favorites-panel,
+    .budget-panel {
+      background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
     .main-panel {
-      padding: 18px;
+      padding: 16px;
+      min-width: 0;
     }
 
     .toolbar {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .search-box {
+    .search-box,
+    .budget-input,
+    .other-form input {
       width: 100%;
       border: 2px solid var(--border);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 13px 14px;
       font-size: 1rem;
       outline: none;
       background: #fff;
       transition: 0.2s;
     }
 
-    .search-box:focus {
+    .search-box:focus,
+    .budget-input:focus,
+    .other-form input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.12);
     }
@@ -110,18 +112,19 @@
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .filter-btn {
       border: 0;
       background: #fff;
       color: var(--text);
-      padding: 10px 14px;
+      padding: 11px 15px;
       border-radius: 999px;
       cursor: pointer;
       white-space: nowrap;
-      font-weight: 700;
+      font-weight: 900;
+      font-size: 1rem;
       border: 1px solid var(--border);
       transition: 0.2s;
     }
@@ -136,24 +139,23 @@
 
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
-      width: 100%;
-      overflow: hidden;
     }
 
     .product-card {
+      position: relative;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 16px;
+      padding: 14px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      min-height: 190px;
-      min-width: 0;
+      gap: 9px;
+      min-height: 250px;
       transition: 0.2s;
+      min-width: 0;
     }
 
     .product-card:hover {
@@ -161,15 +163,43 @@
       box-shadow: 0 14px 24px rgba(0,0,0,0.09);
     }
 
+    .favorite-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: 1.05rem;
+      display: grid;
+      place-items: center;
+      transition: 0.2s;
+    }
+
+    .favorite-btn:hover {
+      transform: scale(1.06);
+      border-color: var(--pink);
+    }
+
+    .favorite-btn.active {
+      background: #ffe4f1;
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
     .emoji {
-      font-size: 2.5rem;
+      font-size: 2.35rem;
       line-height: 1;
+      padding-right: 30px;
     }
 
     .product-name {
       font-size: 1.02rem;
-      font-weight: 800;
-      overflow-wrap: anywhere;
+      font-weight: 900;
+      line-height: 1.2;
     }
 
     .category-pill {
@@ -180,14 +210,41 @@
       border-radius: 999px;
       background: #fff3df;
       color: var(--primary-dark);
-      font-size: 0.92rem;
+      font-size: 0.82rem;
       font-weight: 900;
+      line-height: 1.15;
     }
 
     .note {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       min-height: 18px;
+    }
+
+    .price-field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .price-field label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .price-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-weight: 800;
+      outline: none;
+      background: #fff;
+    }
+
+    .price-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
     }
 
     .qty-row {
@@ -212,8 +269,13 @@
       transition: 0.2s;
     }
 
-    .minus { background: var(--red); }
-    .plus { background: var(--green); }
+    .minus {
+      background: var(--red);
+    }
+
+    .plus {
+      background: var(--green);
+    }
 
     .qty-btn:hover {
       opacity: 0.88;
@@ -230,13 +292,18 @@
     .side {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       position: sticky;
-      top: 16px;
+      top: 14px;
+      min-width: 0;
     }
 
     .cart-panel,
-    .other-panel { padding: 18px; }
+    .other-panel,
+    .favorites-panel,
+    .budget-panel {
+      padding: 16px;
+    }
 
     .cart-header {
       display: flex;
@@ -247,9 +314,12 @@
     }
 
     .cart-header h2,
-    .other-panel h2 {
+    .other-panel h2,
+    .favorites-panel h2,
+    .budget-panel h2 {
       color: var(--primary-dark);
-      font-size: 1.5rem;
+      font-size: 1.55rem;
+      line-height: 1.1;
     }
 
     .total-badge {
@@ -258,7 +328,8 @@
       border-radius: 999px;
       padding: 8px 12px;
       font-weight: 900;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      white-space: nowrap;
     }
 
     .summary {
@@ -272,23 +343,73 @@
       background: #fff8ed;
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 12px;
+      padding: 11px;
       text-align: center;
     }
 
     .summary-card strong {
       display: block;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       color: var(--primary-dark);
     }
 
     .summary-card span {
       color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
+      font-size: 0.8rem;
+      font-weight: 800;
     }
 
-    .cart-list {
+    .budget-status {
+      margin-top: 10px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .budget-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      border-radius: 999px;
+      transition: 0.25s;
+    }
+
+    .progress-bar.warning {
+      background: var(--yellow);
+    }
+
+    .progress-bar.over {
+      background: var(--red);
+    }
+
+    .budget-message {
+      font-weight: 900;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .cart-list,
+    .favorites-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -298,16 +419,23 @@
       margin-bottom: 14px;
     }
 
-    .cart-empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 20px 8px;
-      background: #f9fafb;
-      border-radius: 14px;
-      font-weight: 700;
+    .favorites-list {
+      max-height: 220px;
+      margin-bottom: 0;
     }
 
-    .cart-item {
+    .cart-empty,
+    .favorites-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 18px 8px;
+      background: #f9fafb;
+      border-radius: 14px;
+      font-weight: 800;
+    }
+
+    .cart-item,
+    .favorite-item {
       display: grid;
       grid-template-columns: auto 1fr auto;
       gap: 10px;
@@ -318,17 +446,39 @@
       padding: 10px;
     }
 
-    .cart-item-emoji { font-size: 1.7rem; }
-
-    .cart-item-name {
-      font-weight: 900;
-      margin-bottom: 2px;
+    .favorite-item {
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    .cart-item-cat {
-      font-size: 0.78rem;
+    .favorite-item:hover {
+      transform: translateY(-1px);
+      border-color: var(--pink);
+    }
+
+    .cart-item-emoji,
+    .favorite-item-emoji {
+      font-size: 1.6rem;
+    }
+
+    .cart-item-name,
+    .favorite-item-name {
+      font-weight: 900;
+      margin-bottom: 2px;
+      line-height: 1.15;
+    }
+
+    .cart-item-cat,
+    .favorite-item-cat {
+      font-size: 0.76rem;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 800;
+    }
+
+    .cart-item-side {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
     }
 
     .cart-item-qty {
@@ -338,6 +488,24 @@
       padding: 7px 10px;
       font-weight: 900;
       white-space: nowrap;
+    }
+
+    .cart-item-price {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .favorite-add {
+      background: #ffe4f1;
+      color: var(--pink);
+      border-radius: 999px;
+      padding: 7px 9px;
+      font-weight: 900;
+      white-space: nowrap;
+      border: 0;
+      cursor: pointer;
     }
 
     .actions {
@@ -356,8 +524,15 @@
       transition: 0.2s;
     }
 
-    .copy-btn { background: var(--green); color: #fff; }
-    .clear-btn { background: #111827; color: #fff; }
+    .copy-btn {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .clear-btn {
+      background: #111827;
+      color: #fff;
+    }
 
     .action-btn:hover {
       transform: translateY(-1px);
@@ -369,18 +544,6 @@
       gap: 10px;
       margin-top: 12px;
     }
-
-    .other-form input {
-      width: 100%;
-      border: 2px solid var(--border);
-      border-radius: 13px;
-      padding: 12px 13px;
-      font-size: 0.95rem;
-      outline: none;
-      background: #fff;
-    }
-
-    .other-form input:focus { border-color: var(--primary); }
 
     .other-form-row {
       display: grid;
@@ -414,7 +577,7 @@
       padding: 13px 18px;
       border-radius: 999px;
       box-shadow: var(--shadow);
-      font-weight: 800;
+      font-weight: 900;
       opacity: 0;
       transition: 0.3s;
       z-index: 100;
@@ -433,51 +596,70 @@
       text-align: center;
       border-radius: 18px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    @media (max-width: 980px) {
-      .app { grid-template-columns: 1fr; }
-      .side { position: static; }
-      .toolbar { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1020px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
 
+      .side {
+        position: static;
+      }
+    }
 
     @media (max-width: 760px) {
       .products-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 520px) {
+      header {
+        padding-top: 22px;
+      }
+
+      .main-panel,
+      .cart-panel,
+      .other-panel,
+      .favorites-panel,
+      .budget-panel {
+        padding: 13px;
+      }
+
       .products-grid {
         grid-template-columns: 1fr;
       }
-    }
 
-    @media (max-width: 560px) {
-      header { padding-top: 22px; }
-      .main-panel,
-      .cart-panel,
-      .other-panel { padding: 14px; }
-      .products-grid { gap: 10px; }
       .product-card {
-        min-height: 210px;
-        padding: 13px;
+        min-height: 235px;
       }
-      .emoji { font-size: 2rem; }
-      .product-name { font-size: 0.95rem; }
-      .category-pill { font-size: 0.82rem; }
+
+      .emoji {
+        font-size: 2.15rem;
+      }
+
+      .product-name {
+        font-size: 1rem;
+      }
+
+      .category-pill {
+        font-size: 0.76rem;
+      }
+
       .other-form-row,
       .actions,
-      .summary { grid-template-columns: 1fr; }
+      .summary {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>🛒 Lista de Súper FAM Gonzalez</h1>
-    <p>Selecciona productos, ajusta cantidades y copia tu lista ordenada por categoría :)</p>
+    <p>Selecciona productos, marca favoritos, agrega precios y controla tu presupuesto.</p>
   </header>
 
   <main class="app">
@@ -485,11 +667,32 @@
       <div class="toolbar">
         <input id="searchInput" class="search-box" type="text" placeholder="Buscar ingrediente..." />
       </div>
+
       <div id="filters" class="filters"></div>
+
       <div id="productsGrid" class="products-grid"></div>
     </section>
 
     <aside class="side">
+      <section class="budget-panel">
+        <h2>Presupuesto</h2>
+        <input id="budgetInput" class="budget-input" type="number" min="0" step="1" placeholder="Ejemplo: 2000" />
+        <div class="budget-status">
+          <div class="budget-line">
+            <span>Total actual</span>
+            <span id="currentTotal">$0</span>
+          </div>
+          <div class="budget-line">
+            <span>Presupuesto</span>
+            <span id="budgetTotal">$0</span>
+          </div>
+          <div class="progress-wrap">
+            <div id="budgetProgress" class="progress-bar"></div>
+          </div>
+          <div id="budgetMessage" class="budget-message">Agrega precios para calcular tu total.</div>
+        </div>
+      </section>
+
       <section class="cart-panel">
         <div class="cart-header">
           <h2>Mi lista</h2>
@@ -505,6 +708,14 @@
             <strong id="totalCount">0</strong>
             <span>Cantidad total</span>
           </div>
+          <div class="summary-card">
+            <strong id="moneyTotal">$0</strong>
+            <span>Total estimado</span>
+          </div>
+          <div class="summary-card">
+            <strong id="remainingTotal">$0</strong>
+            <span>Restante</span>
+          </div>
         </div>
 
         <div id="cartList" class="cart-list">
@@ -517,6 +728,13 @@
         </div>
       </section>
 
+      <section class="favorites-panel">
+        <h2>Favoritos</h2>
+        <div id="favoritesList" class="favorites-list">
+          <div class="favorites-empty">Todavía no tienes favoritos.</div>
+        </div>
+      </section>
+
       <section class="other-panel">
         <h2>Otros</h2>
         <form id="otherForm" class="other-form">
@@ -526,13 +744,14 @@
             <input id="otherEmoji" type="text" placeholder="Emoji 🛒" maxlength="4" />
             <input id="otherQty" type="number" placeholder="Cantidad" min="1" value="1" required />
           </div>
+          <input id="otherPrice" type="number" min="0" step="0.01" placeholder="Precio unitario opcional" />
           <button type="submit" class="add-other-btn">Agregar a otros</button>
         </form>
       </section>
     </aside>
   </main>
 
-  <div id="toast" class="toast">Lista copiada ✅</div>
+  <div id="toast" class="toast">Listo ✅</div>
 
   <script>
     const products = [
@@ -549,10 +768,12 @@
       { id: "esponjas-para-trastes", emoji: "🧽", name: "Esponjas para trastes", category: "Limpieza y hogar", note: "" },
       { id: "limpiador-de-pisos", emoji: "🧴", name: "Limpiador de pisos", category: "Limpieza y hogar", note: "" },
       { id: "guantes", emoji: "🧤", name: "Guantes", category: "Limpieza y hogar", note: "" },
+
       { id: "chocomilk", emoji: "🍫", name: "Chocomilk", category: "Bebidas y básicos", note: "" },
       { id: "cafe", emoji: "☕", name: "Café", category: "Bebidas y básicos", note: "" },
       { id: "te", emoji: "🍵", name: "Té", category: "Bebidas y básicos", note: "" },
       { id: "coque", emoji: "🥤", name: "Coque", category: "Bebidas y básicos", note: "" },
+
       { id: "leche", emoji: "🥛", name: "Leche", category: "Fríos y lácteos", note: "" },
       { id: "yogurt", emoji: "🥣", name: "Yogurt", category: "Fríos y lácteos", note: "" },
       { id: "queso-gouda", emoji: "🧀", name: "Queso gouda", category: "Fríos y lácteos", note: "" },
@@ -560,9 +781,11 @@
       { id: "crema", emoji: "🥛", name: "Crema", category: "Fríos y lácteos", note: "" },
       { id: "jamon", emoji: "🍖", name: "Jamón", category: "Fríos y lácteos", note: "" },
       { id: "queso-de-puerco", emoji: "🐷", name: "Queso de puerco", category: "Fríos y lácteos", note: "" },
+
       { id: "huevo", emoji: "🥚", name: "Huevo", category: "Huevos y tortillas", note: "" },
       { id: "tortillas-de-harina", emoji: "🌯", name: "Tortillas de harina", category: "Huevos y tortillas", note: "" },
       { id: "tortillas-de-maiz", emoji: "🌽", name: "Tortillas de maíz", category: "Huevos y tortillas", note: "" },
+
       { id: "miel", emoji: "🍯", name: "Miel", category: "Semillas, cereales y endulzantes", note: "" },
       { id: "granola", emoji: "🥣", name: "Granola", category: "Semillas, cereales y endulzantes", note: "" },
       { id: "nueces", emoji: "🥜", name: "Nueces", category: "Semillas, cereales y endulzantes", note: "" },
@@ -570,19 +793,23 @@
       { id: "semillas-de-calabaza", emoji: "🎃", name: "Semillas de calabaza", category: "Semillas, cereales y endulzantes", note: "" },
       { id: "arandanos", emoji: "🍒", name: "Arándanos", category: "Semillas, cereales y endulzantes", note: "" },
       { id: "datiles", emoji: "🌴", name: "Dátiles", category: "Semillas, cereales y endulzantes", note: "" },
+
       { id: "arroz", emoji: "🍚", name: "Arroz", category: "Despensa", note: "" },
       { id: "frijol", emoji: "🫘", name: "Frijol", category: "Despensa", note: "" },
       { id: "lenteja", emoji: "🫘", name: "Lenteja", category: "Despensa", note: "" },
       { id: "pastas", emoji: "🍝", name: "Pastas", category: "Despensa", note: "" },
       { id: "garbanzo", emoji: "🧆", name: "Garbanzo", category: "Despensa", note: "" },
       { id: "atun", emoji: "🥫", name: "Atún", category: "Despensa", note: "" },
+
       { id: "pollo", emoji: "🍗", name: "Pollo", category: "Carnes y pescados", note: "" },
       { id: "puerco", emoji: "🐖", name: "Puerco", category: "Carnes y pescados", note: "" },
       { id: "res", emoji: "🥩", name: "Res", category: "Carnes y pescados", note: "" },
       { id: "salmon", emoji: "🐟", name: "Salmón", category: "Carnes y pescados", note: "" },
       { id: "pescado", emoji: "🐟", name: "Pescado", category: "Carnes y pescados", note: "" },
+
       { id: "fruta", emoji: "🍎", name: "Fruta", category: "Frutas y verduras", note: "" },
       { id: "verdura", emoji: "🥦", name: "Verdura", category: "Frutas y verduras", note: "" },
+
       { id: "mayonesa", emoji: "🥚", name: "Mayonesa", category: "Aderezos y complementos", note: "" },
       { id: "galletas", emoji: "🍪", name: "Galletas", category: "Aderezos y complementos", note: "" }
     ];
@@ -602,14 +829,24 @@
 
     let selectedCategory = "Todos";
     const cart = new Map();
+    const favorites = new Set();
+    const prices = new Map();
 
     const productsGrid = document.getElementById("productsGrid");
     const filters = document.getElementById("filters");
     const searchInput = document.getElementById("searchInput");
     const cartList = document.getElementById("cartList");
+    const favoritesList = document.getElementById("favoritesList");
     const uniqueCount = document.getElementById("uniqueCount");
     const totalCount = document.getElementById("totalCount");
+    const moneyTotal = document.getElementById("moneyTotal");
+    const remainingTotal = document.getElementById("remainingTotal");
     const totalBadge = document.getElementById("totalBadge");
+    const currentTotal = document.getElementById("currentTotal");
+    const budgetTotal = document.getElementById("budgetTotal");
+    const budgetProgress = document.getElementById("budgetProgress");
+    const budgetMessage = document.getElementById("budgetMessage");
+    const budgetInput = document.getElementById("budgetInput");
     const copyBtn = document.getElementById("copyBtn");
     const clearBtn = document.getElementById("clearBtn");
     const otherForm = document.getElementById("otherForm");
@@ -617,23 +854,36 @@
     const otherNote = document.getElementById("otherNote");
     const otherEmoji = document.getElementById("otherEmoji");
     const otherQty = document.getElementById("otherQty");
+    const otherPrice = document.getElementById("otherPrice");
     const toast = document.getElementById("toast");
 
+    function formatMoney(value) {
+      return "$" + Number(value || 0).toLocaleString("es-MX", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
     function normalizeText(text) {
-      return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
     }
 
     function createFilters() {
-      const categories = ["Todos", ...categoryOrder];
+      const categories = ["Todos", "Favoritos", ...categoryOrder];
       filters.innerHTML = "";
 
       categories.forEach(category => {
         const btn = document.createElement("button");
         btn.className = "filter-btn";
-        btn.textContent = category === "Todos" ? "🛒 Todos" : category;
+        btn.textContent = category === "Todos" ? "🛒 Todos" : category === "Favoritos" ? "❤️ Favoritos" : category;
         btn.dataset.category = category;
 
-        if (category === selectedCategory) btn.classList.add("active");
+        if (category === selectedCategory) {
+          btn.classList.add("active");
+        }
 
         btn.addEventListener("click", () => {
           selectedCategory = category;
@@ -648,12 +898,18 @@
 
     function getVisibleProducts() {
       const query = normalizeText(searchInput.value.trim());
+
       return products.filter(product => {
-        const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
+        const matchesCategory =
+          selectedCategory === "Todos" ||
+          product.category === selectedCategory ||
+          (selectedCategory === "Favoritos" && favorites.has(product.id));
+
         const matchesSearch =
           normalizeText(product.name).includes(query) ||
           normalizeText(product.category).includes(query) ||
           normalizeText(product.note || "").includes(query);
+
         return matchesCategory && matchesSearch;
       });
     }
@@ -670,14 +926,22 @@
       visibleProducts.forEach(product => {
         const item = cart.get(product.id);
         const quantity = item ? item.quantity : 0;
+        const isFavorite = favorites.has(product.id);
+        const price = prices.get(product.id) || "";
+
         const card = document.createElement("article");
         card.className = "product-card";
 
         card.innerHTML = `
+          <button class="favorite-btn ${isFavorite ? "active" : ""}" type="button" aria-label="Favorito">${isFavorite ? "❤️" : "♡"}</button>
           <div class="emoji">${product.emoji}</div>
           <div class="product-name">${product.name}</div>
           <div class="category-pill">${product.category}</div>
           <div class="note">${product.note || ""}</div>
+          <div class="price-field">
+            <label>Precio unitario</label>
+            <input class="price-input" type="number" min="0" step="0.01" placeholder="$0" value="${price}">
+          </div>
           <div class="qty-row">
             <button class="qty-btn minus" type="button" aria-label="Restar">−</button>
             <div class="qty-number">${quantity}</div>
@@ -685,8 +949,11 @@
           </div>
         `;
 
+        card.querySelector(".favorite-btn").addEventListener("click", () => toggleFavorite(product.id));
         card.querySelector(".minus").addEventListener("click", () => updateQuantity(product.id, -1));
         card.querySelector(".plus").addEventListener("click", () => updateQuantity(product.id, 1));
+        card.querySelector(".price-input").addEventListener("input", event => updatePrice(product.id, event.target.value));
+
         productsGrid.appendChild(card);
       });
     }
@@ -708,11 +975,37 @@
       renderCart();
     }
 
-    function addCustomItem(name, note, emoji, quantity) {
+    function updatePrice(id, value) {
+      const numberValue = Number(value);
+
+      if (value === "" || Number.isNaN(numberValue) || numberValue < 0) {
+        prices.delete(id);
+      } else {
+        prices.set(id, numberValue);
+      }
+
+      renderCart();
+    }
+
+    function toggleFavorite(id) {
+      if (favorites.has(id)) {
+        favorites.delete(id);
+        showToast("Quitado de favoritos 🤍");
+      } else {
+        favorites.add(id);
+        showToast("Agregado a favoritos ❤️");
+      }
+
+      renderProducts();
+      renderFavorites();
+    }
+
+    function addCustomItem(name, note, emoji, quantity, price) {
       const cleanName = name.trim();
       const cleanNote = note.trim();
       const cleanEmoji = emoji.trim() || "🛒";
       const cleanQuantity = Math.max(1, Number(quantity) || 1);
+      const cleanPrice = Number(price);
       const id = "otros-" + Date.now();
 
       const customProduct = {
@@ -725,18 +1018,42 @@
 
       products.push(customProduct);
       cart.set(id, { ...customProduct, quantity: cleanQuantity });
-      createFilters();
+
+      if (!Number.isNaN(cleanPrice) && cleanPrice >= 0 && price !== "") {
+        prices.set(id, cleanPrice);
+      }
+
       renderProducts();
       renderCart();
+      renderFavorites();
+      createFilters();
+    }
+
+    function calculateTotalMoney() {
+      return Array.from(cart.values()).reduce((sum, item) => {
+        const price = prices.get(item.id) || 0;
+        return sum + price * item.quantity;
+      }, 0);
     }
 
     function renderCart() {
       const items = Array.from(cart.values());
       const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+      const totalMoney = calculateTotalMoney();
+      const budget = Number(budgetInput.value) || 0;
+      const remaining = budget - totalMoney;
 
       uniqueCount.textContent = items.length;
       totalCount.textContent = totalItems;
+      moneyTotal.textContent = formatMoney(totalMoney);
+      remainingTotal.textContent = budget > 0 ? formatMoney(remaining) : "$0";
       totalBadge.textContent = totalItems === 1 ? "1 artículo" : `${totalItems} artículos`;
+
+      currentTotal.textContent = formatMoney(totalMoney);
+      budgetTotal.textContent = budget > 0 ? formatMoney(budget) : "$0";
+
+      updateBudgetStatus(totalMoney, budget);
+
       cartList.innerHTML = "";
 
       if (items.length === 0) {
@@ -752,6 +1069,9 @@
       });
 
       sortedItems.forEach(item => {
+        const unitPrice = prices.get(item.id) || 0;
+        const itemTotal = unitPrice * item.quantity;
+
         const cartItem = document.createElement("div");
         cartItem.className = "cart-item";
         cartItem.innerHTML = `
@@ -760,17 +1080,88 @@
             <div class="cart-item-name">${item.name}</div>
             <div class="cart-item-cat">${item.category}</div>
           </div>
-          <div class="cart-item-qty">${item.quantity} x</div>
+          <div class="cart-item-side">
+            <div class="cart-item-qty">${item.quantity} x</div>
+            <div class="cart-item-price">${unitPrice ? formatMoney(itemTotal) : "Sin precio"}</div>
+          </div>
         `;
         cartList.appendChild(cartItem);
       });
     }
 
+    function updateBudgetStatus(totalMoney, budget) {
+      budgetProgress.classList.remove("warning", "over");
+
+      if (budget <= 0) {
+        budgetProgress.style.width = "0%";
+        budgetMessage.textContent = totalMoney > 0
+          ? "Agrega un presupuesto para compararlo con tu total."
+          : "Agrega precios para calcular tu total.";
+        return;
+      }
+
+      const percentage = Math.min((totalMoney / budget) * 100, 100);
+      budgetProgress.style.width = percentage + "%";
+
+      if (totalMoney > budget) {
+        budgetProgress.classList.add("over");
+        budgetMessage.textContent = `Te pasaste por ${formatMoney(totalMoney - budget)}.`;
+      } else if (percentage >= 80) {
+        budgetProgress.classList.add("warning");
+        budgetMessage.textContent = `Cuidado, te quedan ${formatMoney(budget - totalMoney)}.`;
+      } else {
+        budgetMessage.textContent = `Vas bien, te quedan ${formatMoney(budget - totalMoney)}.`;
+      }
+    }
+
+    function renderFavorites() {
+      const favoriteProducts = products
+        .filter(product => favorites.has(product.id))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      favoritesList.innerHTML = "";
+
+      if (favoriteProducts.length === 0) {
+        favoritesList.innerHTML = '<div class="favorites-empty">Todavía no tienes favoritos.</div>';
+        return;
+      }
+
+      favoriteProducts.forEach(product => {
+        const favoriteItem = document.createElement("div");
+        favoriteItem.className = "favorite-item";
+        favoriteItem.innerHTML = `
+          <div class="favorite-item-emoji">${product.emoji}</div>
+          <div>
+            <div class="favorite-item-name">${product.name}</div>
+            <div class="favorite-item-cat">${product.category}</div>
+          </div>
+          <button class="favorite-add" type="button">+1</button>
+        `;
+
+        favoriteItem.querySelector(".favorite-add").addEventListener("click", event => {
+          event.stopPropagation();
+          updateQuantity(product.id, 1);
+        });
+
+        favoriteItem.addEventListener("click", () => {
+          selectedCategory = "Favoritos";
+          createFilters();
+          renderProducts();
+        });
+
+        favoritesList.appendChild(favoriteItem);
+      });
+    }
+
     function buildCopyText() {
       const items = Array.from(cart.values());
-      if (items.length === 0) return "Lista de súper:\n\nNo hay ingredientes seleccionados.";
+
+      if (items.length === 0) {
+        return "Lista de súper:\n\nNo hay ingredientes seleccionados.";
+      }
 
       let text = "Lista de súper:\n\n";
+
       categoryOrder.forEach(category => {
         const categoryItems = items
           .filter(item => item.category === category)
@@ -778,18 +1169,36 @@
 
         if (categoryItems.length > 0) {
           text += `${category}:\n`;
+
           categoryItems.forEach(item => {
             const noteText = item.note ? ` - ${item.note}` : "";
-            text += `- ${item.quantity} x ${item.emoji} ${item.name}${noteText}\n`;
+            const unitPrice = prices.get(item.id) || 0;
+            const priceText = unitPrice ? ` | ${formatMoney(unitPrice)} c/u | Total: ${formatMoney(unitPrice * item.quantity)}` : "";
+            text += `- ${item.quantity} x ${item.emoji} ${item.name}${noteText}${priceText}\n`;
           });
+
           text += "\n";
         }
       });
+
+      const totalMoney = calculateTotalMoney();
+      const budget = Number(budgetInput.value) || 0;
+
+      text += `Total estimado: ${formatMoney(totalMoney)}\n`;
+
+      if (budget > 0) {
+        text += `Presupuesto: ${formatMoney(budget)}\n`;
+        text += totalMoney <= budget
+          ? `Restante: ${formatMoney(budget - totalMoney)}`
+          : `Excedente: ${formatMoney(totalMoney - budget)}`;
+      }
+
       return text.trim();
     }
 
     async function copyList() {
       const text = buildCopyText();
+
       try {
         await navigator.clipboard.writeText(text);
         showToast("Lista copiada ✅");
@@ -814,17 +1223,30 @@
     function showToast(message) {
       toast.textContent = message;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1900);
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
     }
 
     searchInput.addEventListener("input", renderProducts);
+    budgetInput.addEventListener("input", renderCart);
     copyBtn.addEventListener("click", copyList);
     clearBtn.addEventListener("click", clearList);
 
     otherForm.addEventListener("submit", event => {
       event.preventDefault();
+
       if (!otherName.value.trim()) return;
-      addCustomItem(otherName.value, otherNote.value, otherEmoji.value, otherQty.value);
+
+      addCustomItem(
+        otherName.value,
+        otherNote.value,
+        otherEmoji.value,
+        otherQty.value,
+        otherPrice.value
+      );
+
       otherForm.reset();
       otherQty.value = 1;
       showToast("Agregado a Otros 🛒");
@@ -833,6 +1255,7 @@
     createFilters();
     renderProducts();
     renderCart();
+    renderFavorites();
   </script>
 </body>
 </html>
